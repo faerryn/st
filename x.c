@@ -965,13 +965,12 @@ xloadfonts(const char *fontstr, double fontsize)
 	if (!pattern)
 		die("can't open font %s\n", fontstr);
 
-	if (fontsize > 1) {
-		FcPatternDel(pattern, FC_PIXEL_SIZE);
+	if (fontsize >= 1) {
 		FcPatternDel(pattern, FC_SIZE);
-		FcPatternAddDouble(pattern, FC_PIXEL_SIZE, (double)fontsize);
+		FcPatternAddDouble(pattern, FC_SIZE, (double)fontsize);
 		usedfontsize = fontsize;
 	} else {
-		if (FcPatternGetDouble(pattern, FC_PIXEL_SIZE, 0, &fontval) ==
+		if (FcPatternGetDouble(pattern, FC_SIZE, 0, &fontval) ==
 				FcResultMatch) {
 			usedfontsize = fontval;
 		} else if (FcPatternGetDouble(pattern, FC_SIZE, 0, &fontval) ==
@@ -982,7 +981,7 @@ xloadfonts(const char *fontstr, double fontsize)
 			 * Default font size is 12, if none given. This is to
 			 * have a known usedfontsize value.
 			 */
-			FcPatternAddDouble(pattern, FC_PIXEL_SIZE, 12);
+			FcPatternAddDouble(pattern, FC_SIZE, 12);
 			usedfontsize = 12;
 		}
 		defaultfontsize = usedfontsize;
@@ -993,7 +992,7 @@ xloadfonts(const char *fontstr, double fontsize)
 
 	if (usedfontsize < 0) {
 		FcPatternGetDouble(dc.font.match->pattern,
-		                   FC_PIXEL_SIZE, 0, &fontval);
+		                   FC_SIZE, 0, &fontval);
 		usedfontsize = fontval;
 		if (fontsize == 0)
 			defaultfontsize = fontval;
